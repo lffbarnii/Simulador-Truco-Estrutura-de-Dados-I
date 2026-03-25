@@ -20,6 +20,28 @@ var
   nomesNaipes: array[1..4] of string;
   i, j: integer;
 
+  cartaRetirada: TCarta; 
+
+function retiraCarta(var baralho: TBaralho): TCarta;
+var
+  cartaVazia: TCarta;
+begin
+  if baralho.topo > 0 then
+  begin
+    retiraCarta := baralho.cartas[baralho.topo];
+    baralho.topo := baralho.topo - 1;
+  end
+  else
+  begin
+    writeln('Erro: Não há mais cartas no baralho!');
+    cartaVazia.nome := '';
+    cartaVazia.naipe := '';
+    cartaVazia.pontuacao_carta := 0;
+    cartaVazia.pontuacao_naipe := 0;
+    retiraCarta := cartaVazia;
+  end;
+end;
+
 begin
   nomesCartas[1] := '4';
   nomesCartas[2] := '5';

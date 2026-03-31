@@ -20,30 +20,18 @@ var
   nomesNaipes: array[1..4] of string;
   i, j: integer;
 
-  cartaRetirada: TCarta; 
-
 function retirarCarta(var baralho: TBaralho): TCarta;
-var
-  cartaVazia: TCarta;
 begin
-  //verifica se o baralho não está vazio
-  if baralho.topo > 0 then
-  begin
-    //retorna a carta do topo do baralho
-    retirarCarta := baralho.cartas[baralho.topo];
+  //Não precisamos verificar se o baralho está vazio pois o baralho tem 40
+  //cartas, e vamos tirar no máximo 7 (3 em cada mão mais 1 manilha)
 
-    //atualiza o topo do baralho para ser a carta abaixo da carta retirada
-    baralho.topo := baralho.topo - 1;
-  end
-  else
-  begin
-    writeln('Erro: Não há mais cartas no baralho!');
-    cartaVazia.nome := '';
-    cartaVazia.naipe := '';
-    cartaVazia.pontuacao_carta := 0;
-    cartaVazia.pontuacao_naipe := 0;
-    retirarCarta := cartaVazia;
-  end;
+  //retorna a carta do topo do baralho
+  retirarCarta := baralho.cartas[baralho.topo];
+
+  //atualiza o topo do baralho para ser a carta abaixo da carta retirada
+  baralho.topo := baralho.topo - 1;
+  
+  retirarCarta := cartaVazia;
 end;
 
 procedure embaralhar(var baralho: TBaralho);

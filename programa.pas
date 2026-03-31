@@ -30,8 +30,6 @@ begin
 
   //atualiza o topo do baralho para ser a carta abaixo da carta retirada
   baralho.topo := baralho.topo - 1;
-  
-  retirarCarta := cartaVazia;
 end;
 
 procedure embaralhar(var baralho: TBaralho);

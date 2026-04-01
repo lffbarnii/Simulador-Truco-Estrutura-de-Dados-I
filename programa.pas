@@ -32,6 +32,47 @@ begin
   baralho.topo := baralho.topo - 1;
 end;
 
+function compararCarta(carta1, carta2: TCarta; valor_manilha: integer): boolean;
+begin
+  //Se as duas cartas são manilhas, o desempate é pelo naipe
+  if (carta1.pontuacao_carta = valor_manilha) and (carta2.pontuacao_carta = valor_manilha) then
+  begin
+    if carta1.pontuacao_naipe > carta2.pontuacao_naipe then
+      compararCarta := true;
+    else
+      compararCarta := false; 
+  end
+  
+  //Se apenas a primeira carta é manilha, retorna true
+  else if (carta1.pontuacao_carta = valor_manilha) then
+  begin
+    compararCarta := true;
+  end
+  
+  //Se apenas a segunda é manilha, retorna false
+  else if (carta2.pontuacao_carta = valor_manilha) then
+  begin
+    compararCarta := false;
+  end
+  
+  //Nenhuma é manilha: compara o valor das cartas e, em caso de empaite o naipe
+  else
+  if carta1.pontuacao_carta = carta2.pontuacao_carta then
+  begin
+    if carta1.pontuacao_naipe > carta2.pontuacao_naipe then
+      compararCarta := true;
+    else
+      compararCarta := false; 
+  end
+  else
+  begin
+    if carta1.pontuacao_carta > carta2.pontuacao_carta then
+      compararCarta := true;
+    else
+      compararCarta := false;
+  end;
+end;
+
 procedure embaralhar(var baralho: TBaralho);
 var
   i, posAleatoria: integer;

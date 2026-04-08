@@ -41,45 +41,37 @@ var
   nomesNaipes: array[1..4] of string;
   i, j, primeiro_jogador: integer;
   
-function compararCarta(carta1, carta2: TCarta; valor_manilha: integer): boolean;
+function compararCarta(carta1, carta2: TCarta; valor_manilha: integer): integer;
 begin
   //Se as duas cartas são manilhas, o desempate é pelo naipe
   if (carta1.pontuacao_carta = valor_manilha) and (carta2.pontuacao_carta = valor_manilha) then
   begin
     if carta1.pontuacao_naipe > carta2.pontuacao_naipe then
-      compararCarta := true;
+      compararCarta := 1;
     else
-      compararCarta := false; 
+      compararCarta := 0; 
   end
   
-  //Se apenas a primeira carta é manilha, retorna true
+  //Se apenas a primeira carta é manilha, retorna 1
   else if (carta1.pontuacao_carta = valor_manilha) then
   begin
-    compararCarta := true;
+    compararCarta := 1;
   end
   
-  //Se apenas a segunda é manilha, retorna false
+  //Se apenas a segunda é manilha, retorna 0
   else if (carta2.pontuacao_carta = valor_manilha) then
   begin
-    compararCarta := false;
+    compararCarta := 0;
   end
   
-  //Nenhuma é manilha: compara o valor das cartas e, em caso de empaite o naipe
+  //Nenhuma é manilha: compara o valor das cartas e, em caso de empate, retorna -1
   else
   if carta1.pontuacao_carta = carta2.pontuacao_carta then
-  begin
-    if carta1.pontuacao_naipe > carta2.pontuacao_naipe then
-      compararCarta := true;
-    else
-      compararCarta := false; 
-  end
-  else
-  begin
-    if carta1.pontuacao_carta > carta2.pontuacao_carta then
-      compararCarta := true;
-    else
-      compararCarta := false;
-  end;
+    return -1
+  else if carta1.pontuacao_carta > carta2.pontuacao_carta then
+    return 1
+  else if carta1.pontuacao_carta < carta2.pontuacao_carta then
+    return 0;
 end;
 
 function retirarCarta(var baralho: TBaralho): TCarta;

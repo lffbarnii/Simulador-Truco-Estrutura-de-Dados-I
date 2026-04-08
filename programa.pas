@@ -21,7 +21,7 @@ type
   end;
   
   TMesa = record
-    cartas: array[1..6] of TCarta;
+    cartas: array[1..2] of TCarta;
     tamanho_maximo: integer;
     topo: integer;
     jogador_maior_carta: integer;
@@ -29,17 +29,17 @@ type
   end;
   
   TRodada = record
-    pontuacao_jogador_1: integer;
-    pontuacao_jogador_2: integer;
+    anterior_empachou : boolean;
+    vitorias_jogador_1: integer;
+    vitorias_jogador_2: integer;
     valor_rodada: integer;
     primeiro_jogador: integer;
   end;
-
-var
-  meuBaralho: TBaralho;
-  nomesCartas: array[1..10] of string;
-  nomesNaipes: array[1..4] of string;
-  i, j, primeiro_jogador: integer;
+  
+  TPartida = record
+    pontuacao_jogador_1: integer;
+    pontuacao_jogador_2: integer
+  end;
   
 function compararCarta(carta1, carta2: TCarta; valor_manilha: integer): integer;
 begin
@@ -201,32 +201,13 @@ begin
   definirMaoInicial := mao;
 end;
 
-procedure colocarCartaNaMesa(var mesa: TMesa; identificador_jogador: integer; carta: TCarta; manilha: TCarta);
+procedure colocarCartaNaMesa(var mesa: TMesa; carta: TCarta);
 begin
   //Adiciona um ao contador do topo do baralho
   mesa.topo := mesa.topo + 1;
   
   //Adiciona a carta informada ao topo do baralho
   mesa.cartas[mesa.topo] := carta;
-  
-  //Se a carta jogada for a primeira
-  if mesa.topo = 1 then
-  begin
-    //Define a carta informada como a maior
-    mesa.maior_carta := carta;
-    
-    //Define o dono da maior carta
-    mesa.jogador_maior_carta := identificador_jogador;
-  end
-  //Se a carta atual for a maior
-  else if isMaior(carta, mesa.maior_carta, manilha) then
-  begin
-    //Define a carta informada como a maior
-    mesa.maior_carta := carta;
-    
-    //Define o dono da maior carta
-    mesa.jogador_maior_carta := identificador_jogador;
-  end;
 end;
 
 function criarBaralho(): TBaralho;
@@ -300,30 +281,55 @@ end;
 procedure jogo(primeiro_jogador: integer);
 var
   rodada: TRodada;
+  partida: TPartida;
   baralho: TBaralho;
   manilha: integer;
+  i: integer;
+  mao_jogador, mao_bot: TMao;
 begin
-  rodada.pontuacao_jogador_1 := 0;
-  rodada.pontuacao_jogador_2 := 0;
-  rodada.valor_rodada := 1;
+  partida.pontuacao_jogador_1 = 0;
+  partida.pontuacao_jogador_2 = 0;
+  rodada.anterior_empachou = false;
   rodada.primeiro_jogador := primeiro_jogador;
   
-  while (rodada.pontuacao_jogador_1 < 12) and (rodada.pontuacao_jogador_2 < 12) do
+  while (partida.pontuacao_jogador_1 < 12) and (partida.pontuacao_jogador_2 < 12) do
   begin
+    rodada.valor_rodada := 1;
     baralho := criarBaralho();
     embaralhar(baralho);
     cortarBaralho(baralho);
+    
+    mao_jogador := definirMaoInicial(baralho);
+    mao_bot := definirMaoInicial(baralho);
     manilha := definirManilha(baralho);
+    
+    for i := 1 to 3 do
+    begin
+      if rodada.primeiro_jogador = 1 then
+      begin
+        //jogador_joga_carta();
+        //bot_joga_carta();
+      end
+      else
+      begin
+        //bot_joga_carta()
+        //jogador_joga_carta()
+      end;
+      
+      //carta_jogador =
+      //carta_bot
+      
+      if compararCarta(carta_jogador, carta_bot, manilha) = 1 then
+        //jogador ganhou a rodada
+    end;
   end;
-  
-
 end;
 
+var
+  primeiro_jogador: integer;
+  
 begin
   randomize;
     
   primeiro_jogador := random(2) + 1;
-  
-  
-
 end.

@@ -330,6 +330,7 @@ var
   i: integer;
   mao_jogador, mao_bot: TMao;
   carta_jogador, carta_bot: TCarta;
+  resultado : integer;
 begin
   // Inicializa o placar da partida
   partida.pontuacao_jogador_1 := 0;
@@ -353,33 +354,72 @@ begin
     writeln;
     writeln('*** NOVA RODADA | MANILHA DO VALOR: ', manilha, ' ***');
     
+    //Zera a contagem de vitórias da rodada atual
+    //Cada nova rodada a contagem começa do zero
+    rodada.vitorias_jogador_1 := 0;
+    rodada.vitorias_jogador_2 := 0;
+    
     // Cada rodada de Truco tem 3 "vazas" (turnos)
     for i := 1 to 3 do
     begin
       // Define a ordem de quem joga primeiro baseada em quem ganhou a anterior
       if rodada.primeiro_jogador = 1 then
       begin
+        // Jogador joga primeiro, depois o bot
         carta_jogador := jogador_joga_carta(mao_jogador);
         carta_bot := bot_joga_carta(mao_bot);
       end
       else
       begin
+        // Bot joga primeiro, depois o jogador
         carta_bot := bot_joga_carta(mao_bot);
         carta_jogador := jogador_joga_carta(mao_jogador);
       end;
       
-      // Compara as duas cartas jogadas e mostra o resultado da vaza
-      if compararCarta(carta_jogador, carta_bot, manilha) = 1 then
-        writeln('>> Voce ganhou esta vaza!')
-      else if compararCarta(carta_jogador, carta_bot, manilha) = 0 then
-        writeln('>> O Bot ganhou esta vaza!')
+      // Compara as duas cartas jogadas na vaza atual
+      resultado := compararCarta(carta_jogador, carta_bot, manilha);
+      
+      // Atualiza o número de vitórias conforme o resultado
+      if resultado = 1 then
+      begin
+        writeln('Você ganhou essa vaza!');
+        rodada.vitorias_jogador_1 := rodada.vitorias_jogador_1 + 1;
+      end
+      else if resultado = 0 then
+      begin
+        writeln('O Bot ganhou esta vaza!');
+        rodada.vitorias_jogador_2 := rodada.vitorias_jogador_2 + 1;
+      end
       else
-        writeln('>> Empachou!');
+      begin
+        // Caso de empate, nimguém pontua
+        writeln('Empachou!');
+      end;
     end;
     
-    { Exemplo de pontuação para teste }
-    partida.pontuacao_jogador_1 := partida.pontuacao_jogador_1 + 1; 
-    writeln('Placar: Voce ', partida.pontuacao_jogador_1, ' x ', partida.pontuacao_jogador_2, ' Bot');
+    //Verifica quem ganhou a rodada (melhor de 3 vazas)
+    if rodada.vitorias_jogador_1 > rodada.vitorias_jogador_2 then
+    begin
+        writeln('Você ganhou a rodada!');
+        
+        // Soma ponto na partida para o jogador
+        partida.pontuacao_jogador_1 := partida.pontuacao_jogador_1 + 1;
+         // Jogador será o primeiro a jogar na próxima rodada
+        rodada.primeiro_jogador := 1;
+    end
+    else if rodada.vitorias_jogador_2 > rodada.vitorias_jogador_1 then
+    begin
+        writeln('Bot ganhou a rodada!');
+        // Soma ponto na partida para o bot
+        partida.pontuacao_jogador_2 := partida.pontuacao_jogador_2 + 1;
+        // Bot será o primeiro na próxima rodada
+        rodada.primeiro_jogador := 2;
+    end
+    else
+    begin
+        // Caso empate na rodada (mesmo número de vazas)
+        writeln('Rodada empatada!');
+    end;
   end;
 end;
 
